@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>登录 / 注册 - Season俱乐部</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Microsoft YaHei", sans-serif;
+        }
+
+        body {
+            background: #0f0f1a;
+            color: #fff;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-image: linear-gradient(rgba(15,15,26,0.9), rgba(15,15,26,1));
+        }
+
+        .login-container {
+            width: 100%;
+            max-width: 400px;
+            background: rgba(26,26,46,0.9);
+            border-radius: 20px;
+            padding: 40px 30px;
+            border: 1px solid #333355;
+            box-shadow: 0 8px 30px rgba(126,34,206,0.2);
+        }
+
+        .title {
+            font-size: 24px;
+            text-align: center;
+            margin-bottom: 30px;
+            color: #00e5ff;
+        }
+
+        .tab-group {
+            display: flex;
+            margin-bottom: 25px;
+            border-radius: 10px;
+            overflow: hidden;
+            background: #1e1e35;
+        }
+
+        .tab {
+            flex: 1;
+            padding: 12px 0;
+            text-align: center;
+            cursor: pointer;
+            font-weight: bold;
+            transition: 0.2s;
+        }
+
+        .tab.active {
+            background: #7e22ce;
+            color: #fff;
+        }
+
+        .input-group {
+            margin-bottom: 18px;
+        }
+
+        .input-group label {
+            font-size: 13px;
+            color: #ccc;
+            margin-bottom: 6px;
+            display: block;
+        }
+
+        input {
+            width: 100%;
+            padding: 14px 16px;
+            border-radius: 10px;
+            border: 1px solid #333355;
+            background: #222233;
+            color: #fff;
+            font-size: 14px;
+            outline: none;
+        }
+
+        input:focus {
+            border-color: #7e22ce;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 14px;
+            border-radius: 10px;
+            border: none;
+            background: linear-gradient(90deg, #7e22ce, #a855f7);
+            color: #fff;
+            font-weight: bold;
+            font-size: 15px;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: 0.2s;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .back-home {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 13px;
+            color: #888;
+            cursor: pointer;
+        }
+
+        .back-home:hover {
+            color: #00e5ff;
+        }
+
+        .form-box {
+            display: none;
+        }
+
+        .form-box.active {
+            display: block;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="login-container">
+        <div class="title">🎮 Season 账号中心</div>
+
+        <div class="tab-group">
+            <div class="tab active" onclick="switchTab('login')">登录</div>
+            <div class="tab" onclick="switchTab('register')">注册</div>
+        </div>
+
+        <!-- 登录表单 -->
+        <div id="loginForm" class="form-box active">
+            <div class="input-group">
+                <label>账号</label>
+                <input type="text" id="login_user" placeholder="请输入您的账号">
+            </div>
+            <div class="input-group">
+                <label>密码</label>
+                <input type="password" id="login_pwd" placeholder="请输入密码">
+            </div>
+            <button class="btn" onclick="userLogin()">登录</button>
+        </div>
+
+        <!-- 注册表单 -->
+        <div id="registerForm" class="form-box">
+            <div class="input-group">
+                <label>账号</label>
+                <input type="text" id="reg_user" placeholder="设置您的账号">
+            </div>
+            <div class="input-group">
+                <label>密码</label>
+                <input type="password" id="reg_pwd" placeholder="设置密码">
+            </div>
+            <button class="btn" onclick="userRegister()">注册</button>
+        </div>
+
+        <div class="back-home" onclick="location.href='/'">← 返回首页</div>
+    </div>
+
+    <script>
+        // 切换登录/注册
+        function switchTab(type) {
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.form-box').forEach(f => f.classList.remove('active'));
+
+            if (type === 'login') {
+                document.querySelectorAll('.tab')[0].classList.add('active');
+                document.getElementById('loginForm').classList.add('active');
+            } else {
+                document.querySelectorAll('.tab')[1].classList.add('active');
+                document.getElementById('registerForm').classList.add('active');
+            }
+        }
+
+        // 用户登录（和你的 server.js session 完全配套）
+        async function userLogin() {
+            const username = document.getElementById('login_user').value.trim();
+            const password = document.getElementById('login_pwd').value.trim();
+
+            if (!username || !password) {
+                alert('请输入账号和密码');
+                return;
+            }
+
+            try {
+                const res = await fetch('/api/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username, password })
+                });
+
+                const data = await res.json();
+                if (data.ok === 1) {
+                    alert('登录成功！');
+                    location.href = '/profile.html';
+                } else {
+                    alert(data.msg || '登录失败：账号或密码错误');
+                }
+            } catch (err) {
+                alert('网络错误，请重试');
+            }
+        }
+
+        // 用户注册（独立账号，每个人自己的）
+        async function userRegister() {
+            const username = document.getElementById('reg_user').value.trim();
+            const password = document.getElementById('reg_pwd').value.trim();
+
+            if (!username || !password) {
+                alert('请输入账号和密码');
+                return;
+            }
+
+            try {
+                const res = await fetch('/api/register', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username, password })
+                });
+
+                const data = await res.json();
+                if (data.ok === 1) {
+                    alert('注册成功！请登录');
+                    switchTab('login');
+                } else {
+                    alert(data.msg || '注册失败：账号已存在');
+                }
+            } catch (err) {
+                alert('网络错误，请重试');
+            }
+        }
+    </script>
+</body>
+</html>

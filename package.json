@@ -1,0 +1,17 @@
+{
+  "name": "season-club",
+  "version": "1.0.0",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "@alicloud/pop-core": "^1.7.1",
+    "express": "^4.22.1",
+    "express-session": "^1.19.0"
+  },
+  "description": "",
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}

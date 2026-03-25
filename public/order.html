@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SeasonClub - 我的订单</title>
+<style>
+body{margin:0;background:#0f172a;color:#fff;padding:30px;font-family:Microsoft YaHei}
+.box{max-width:700px;margin:0 auto}
+.title{font-size:24px;color:#00e5ff;margin-bottom:20px}
+.item{background:#1a1a2e;border-radius:10px;padding:16px;margin-bottom:10px}
+.name{color:#ffb300}
+.price{color:#00ff7f}
+.time{color:#aaa;font-size:12px}
+.back{margin-bottom:20px;padding:10px 20px;background:#00e5ff;color:#000;border:none;border-radius:8px;cursor:pointer}
+</style>
+</head>
+<body>
+<div class="box">
+<button class="back" onclick="location.href='/'">返回大厅</button>
+<div class="title">📋 我的订单</div>
+<div id="list"></div>
+</div>
+
+<script>
+async function load(){
+  const res = await fetch('/api/orders');
+  const d = await res.json();
+  const list = document.getElementById('list');
+  if(d.data.length===0){list.innerHTML='<div>暂无订单</div>';return}
+  list.innerHTML = d.data.map(o=>`
+    <div class="item">
+      <div>陪玩：<span class="name">${o.player}</span></div>
+      <div>金额：<span class="price">¥${o.price}</span></div>
+      <div class="time">${o.createTime} | ${o.status}</div>
+    </div>
+  `).join('');
+}
+load();
+</script>
+</body>
+</html>

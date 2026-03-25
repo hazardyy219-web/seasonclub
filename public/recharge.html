@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Season币充值 - Season俱乐部</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Microsoft YaHei", sans-serif;
+        }
+
+        body {
+            background: #12121a;
+            color: #fff;
+            min-height: 100vh;
+        }
+
+        /* 顶部导航 */
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 24px;
+            background: #1a1a2e;
+            border-bottom: 1px solid #2d2d3f;
+        }
+
+        .logo {
+            font-size: 20px;
+            font-weight: bold;
+            color: #00e5ff;
+            cursor: pointer;
+        }
+
+        .back-btn {
+            padding: 8px 16px;
+            border-radius: 6px;
+            background: transparent;
+            color: #00e5ff;
+            border: 1px solid #00e5ff;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .back-btn:hover {
+            background: #00e5ff;
+            color: #000;
+        }
+
+        /* 容器 */
+        .container {
+            max-width: 500px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        .title {
+            font-size: 24px;
+            text-align: center;
+            margin-bottom: 10px;
+            color: #fff;
+        }
+
+        .tip {
+            text-align: center;
+            color: #aaa;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+
+        /* 汇率说明 */
+        .rate-box {
+            background: #1a1a2e;
+            padding: 16px;
+            border-radius: 12px;
+            text-align: center;
+            margin-bottom: 25px;
+            border: 1px solid #2d2d3f;
+        }
+
+        .rate-title {
+            font-size: 16px;
+            margin-bottom: 8px;
+            color: #00e5ff;
+        }
+
+        .rate-num {
+            font-size: 22px;
+            font-weight: bold;
+            color: #fff;
+        }
+
+        /* 金额选择 */
+        .money-group {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin-bottom: 25px;
+        }
+
+        .money-item {
+            background: #1a1a2e;
+            border: 1px solid #2d2d3f;
+            border-radius: 12px;
+            padding: 18px 10px;
+            text-align: center;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .money-item.active {
+            border-color: #7e22ce;
+            background: rgba(126, 34, 206, 0.2);
+        }
+
+        .money-item:hover {
+            border-color: #7e22ce;
+        }
+
+        .rmb {
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .coin {
+            font-size: 12px;
+            color: #ccc;
+            margin-top: 4px;
+        }
+
+        /* 按钮 */
+        .submit-btn {
+            width: 100%;
+            padding: 16px;
+            border-radius: 12px;
+            background: linear-gradient(90deg, #7e22ce, #a855f7);
+            color: #fff;
+            font-size: 16px;
+            font-weight: bold;
+            border: none;
+            cursor: pointer;
+            transition: 0.2s;
+            margin-top: 10px;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .submit-btn:disabled {
+            background: #444;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* 当前余额 */
+        .balance-info {
+            background: #1a1a2e;
+            padding: 16px;
+            border-radius: 12px;
+            margin-top: 25px;
+            text-align: center;
+            border: 1px solid #2d2d3f;
+        }
+
+        .balance-title {
+            color: #ccc;
+            font-size: 14px;
+        }
+
+        .balance-num {
+            font-size: 24px;
+            font-weight: bold;
+            color: #00e5ff;
+            margin-top: 6px;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- 顶部 -->
+    <div class="navbar">
+        <div class="logo" onclick="location.href='/'">🎮 Season俱乐部</div>
+        <button class="back-btn" onclick="location.href='/profile.html'">← 返回个人中心</button>
+    </div>
+
+    <div class="container">
+        <h2 class="title">💰 Season币 充值中心</h2>
+        <p class="tip">充值后立即到账，可用于下单陪玩</p>
+
+        <!-- 汇率 -->
+        <div class="rate-box">
+            <div class="rate-title">官方汇率</div>
+            <div class="rate-num">1 元 = 10 Season币</div>
+        </div>
+
+        <!-- 金额选择 -->
+        <div class="money-group">
+            <div class="money-item" onclick="selectMoney(1,10)">
+                <div class="rmb">¥1</div>
+                <div class="coin">10 Season币</div>
+            </div>
+            <div class="money-item" onclick="selectMoney(5,50)">
+                <div class="rmb">¥5</div>
+                <div class="coin">50 Season币</div>
+            </div>
+            <div class="money-item" onclick="selectMoney(10,100)">
+                <div class="rmb">¥10</div>
+                <div class="coin">100 Season币</div>
+            </div>
+            <div class="money-item" onclick="selectMoney(20,200)">
+                <div class="rmb">¥20</div>
+                <div class="coin">200 Season币</div>
+            </div>
+            <div class="money-item" onclick="selectMoney(50,500)">
+                <div class="rmb">¥50</div>
+                <div class="coin">500 Season币</div>
+            </div>
+            <div class="money-item" onclick="selectMoney(100,1000)">
+                <div class="rmb">¥100</div>
+                <div class="coin">1000 Season币</div>
+            </div>
+        </div>
+
+        <!-- 充值按钮 -->
+        <button class="submit-btn" id="payBtn" disabled onclick="goPay()">立即充值</button>
+
+        <!-- 当前余额 -->
+        <div class="balance-info">
+            <div class="balance-title">当前账户余额</div>
+            <div class="balance-num" id="currentBalance">0</div>
+        </div>
+    </div>
+
+    <script>
+        // 选中金额
+        let selectedRmb = 0;
+        let selectedCoin = 0;
+
+        // 选择金额
+        function selectMoney(rmb, coin) {
+            selectedRmb = rmb;
+            selectedCoin = coin;
+
+            // 高亮选中
+            document.querySelectorAll('.money-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            event.currentTarget.classList.add('active');
+
+            // 启用按钮
+            document.getElementById('payBtn').disabled = false;
+        }
+
+        // 加载当前余额
+        async function loadBalance() {
+            try {
+                const res = await fetch('/api/user', {
+                    method: 'GET',
+                    credentials: 'include'
+                });
+                const data = await res.json();
+                if (!data.username) {
+                    location.href = '/login.html';
+                    return;
+                }
+                document.getElementById('currentBalance').innerText = data.balance || 0;
+            } catch (e) {
+                location.href = '/login.html';
+            }
+        }
+
+        // 模拟充值（正式环境可对接真实支付）
+        async function goPay() {
+            if (!selectedRmb) {
+                alert('请选择充值金额');
+                return;
+            }
+
+            if (confirm(`确认充值：¥${selectedRmb} = ${selectedCoin} Season币？`)) {
+                try {
+                    // 调用充值接口
+                    const res = await fetch('/api/recharge', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        credentials: 'include',
+                        body: JSON.stringify({
+                            rmb: selectedRmb,
+                            coin: selectedCoin
+                        })
+                    });
+
+                    const data = await res.json();
+                    if (data.ok === 1) {
+                        alert('✅ 充值成功！');
+                        loadBalance(); // 刷新余额
+                    } else {
+                        alert('❌ 充值失败：' + data.msg);
+                    }
+                } catch (err) {
+                    alert('网络错误，请重试');
+                }
+            }
+        }
+
+        window.onload = loadBalance;
+    </script>
+</body>
+</html>

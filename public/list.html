@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>陪玩大厅</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Microsoft YaHei", sans-serif;
+        }
+        body {
+            background-color: #12121a;
+            color: #fff;
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 20px;
+            background-color: #1a1a2e;
+            border-bottom: 1px solid #2d2d3f;
+        }
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .logo {
+            font-size: 20px;
+            color: #00e5ff;
+            font-weight: bold;
+        }
+        .back-btn {
+            padding: 4px 10px;
+            border: 1px solid #00e5ff;
+            border-radius: 4px;
+            background: transparent;
+            color: #00e5ff;
+            font-size: 12px;
+            cursor: pointer;
+        }
+        /* 登录/个人中心按钮样式 */
+        .user-btn {
+            padding: 6px 16px;
+            border-radius: 6px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: 0.2s;
+            border: 1px solid #7e22ce;
+            background: transparent;
+            color: #fff;
+        }
+        .user-btn.login {
+            background-color: #7e22ce;
+        }
+        .user-btn.center {
+            background-color: #00e5ff;
+            color: #1a1a2e;
+            border-color: #00e5ff;
+        }
+        .user-btn:hover {
+            opacity: 0.9;
+            transform: translateY(-1px);
+        }
+        .container {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+        .page-title {
+            font-size: 28px;
+            text-align: center;
+            margin-bottom: 30px;
+            color: #fff;
+        }
+        .player-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 25px;
+            justify-content: center;
+        }
+        .player-card {
+            width: 220px;
+            background-color: #1a1a2e;
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            border: 1px solid #2d2d3f;
+        }
+        .player-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            margin: 0 auto 12px;
+            overflow: hidden;
+            border: 2px solid #7e22ce;
+        }
+        .player-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .player-name {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 6px;
+        }
+        .player-tag {
+            font-size: 12px;
+            color: #ccc;
+            margin-bottom: 8px;
+        }
+        .player-status {
+            font-size: 12px;
+            color: #10b981;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+        }
+        .player-status::before {
+            content: "●";
+            font-size: 8px;
+        }
+        .player-status.offline {
+            color: #6b7280;
+        }
+        .player-price {
+            font-size: 16px;
+            color: #00e5ff;
+            margin-bottom: 15px;
+        }
+        .select-btn {
+            width: 100%;
+            padding: 8px;
+            border: none;
+            border-radius: 6px;
+            background-color: #ff0080;
+            color: #fff;
+            font-size: 13px;
+            cursor: pointer;
+        }
+        .select-btn:disabled {
+            background-color: #444;
+            color: #888;
+            cursor: not-allowed;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="header-left">
+          <div class="logo">🎮 陪玩大厅</div>
+          <a href="/index.html" class="back-btn">返回首页</a>
+        </div>
+        <!-- 动态显示登录/个人中心按钮 -->
+        <button id="userBtn" class="user-btn login" onclick="handleUserBtnClick()">登录 / 个人中心</button>
+    </div>
+
+    <div class="container">
+        <h1 class="page-title">选择你喜欢的陪玩</h1>
+        <div class="player-list">
+            <!-- Season阿程 -->
+            <div class="player-card" data-status="online">
+                <div class="player-avatar">
+                    <img src="images/acheng.png" alt="Season阿程">
+                </div>
+                <div class="player-name">Season阿程</div>
+                <div class="player-tag">王者荣耀·野王</div>
+                <div class="player-status">在线</div>
+                <div class="player-price">¥9.9 / 局</div>
+                <button class="select-btn" onclick="location.href='detail.html?player=Season阿程'">选择他</button>
+            </div>
+
+            <!-- Season小蒋 -->
+            <div class="player-card" data-status="online">
+                <div class="player-avatar">
+                    <img src="images/xiaojiang.png" alt="Season小蒋">
+                </div>
+                <div class="player-name">Season小蒋</div>
+                <div class="player-tag">无畏契约·赋能前100</div>
+                <div class="player-status">在线</div>
+                <div class="player-price">¥68 / 局</div>
+                <button class="select-btn" onclick="location.href='detail.html?player=Season小蒋'">选择他</button>
+            </div>
+
+            <!-- Season小刘 -->
+            <div class="player-card" data-status="online">
+                <div class="player-avatar">
+                    <img src="images/xiaoliu.png" alt="Season小刘">
+                </div>
+                <div class="player-name">Season小刘</div>
+                <div class="player-tag">无畏契约·神话3</div>
+                <div class="player-status online">在线</div>
+                <div class="player-price">¥45 / 局</div>
+                <button class="select-btn" onclick="location.href='detail.html?player=Season小刘'">选择他</button>
+            </div>
+
+            <!-- Season小郭 -->
+            <div class="player-card" data-status="online">
+                <div class="player-avatar">
+                    <img src="images/xiaoguo.png" alt="Season小郭">
+                </div>
+                <div class="player-name">Season小郭</div>
+                <div class="player-tag">无畏契约·神话5</div>
+                <div class="player-status">在线</div>
+                <div class="player-price">¥0.99 / 局</div>
+                <button class="select-btn" onclick="location.href='detail.html?player=Season小郭'">选择他</button>
+            </div>
+
+            <!-- Season小杜 -->
+            <div class="player-card" data-status="online">
+                <div class="player-avatar">
+                    <img src="images/xiaodu.png" alt="Season小杜">
+                </div>
+                <div class="player-name">Season小杜</div>
+                <div class="player-tag">三角洲·航天刽子手</div>
+                <div class="player-status">在线</div>
+                <div class="player-price">¥128 / 局</div>
+                <button class="select-btn" onclick="location.href='detail.html?player=Season小杜'">选择他</button>
+            </div>
+
+            <!-- Season饼饼-->
+            <div class="player-card" data-status="online">
+                <div class="player-avatar">
+                    <img src="images/bing.png" alt="Season饼饼">
+                </div>
+                <div class="player-name">Season饼饼</div>
+                <div class="player-tag">无畏契约·赋能姐</div>
+                <div class="player-status">在线</div>
+                <div class="player-price">¥99/ 局</div>
+                <button class="select-btn" onclick="location.href='detail.html?player=Season饼饼'">选择她</button>
+            </div>
+
+            <!-- Season嘟嘟 -->
+            <div class="player-card" data-status="online">
+                <div class="player-avatar">
+                    <img src="images/dudu.png" alt="Season嘟嘟">
+                </div>
+                <div class="player-name">Season嘟嘟</div>
+                <div class="player-tag">三角洲手游·巴克什皇帝</div>
+                <div class="player-status">在线</div>
+                <div class="player-price">¥288 / 局</div>
+                <button class="select-btn" onclick="location.href='detail.html?player=Season嘟嘟'">选择他</button>
+            </div>
+
+            <!-- Season安总 -->
+            <div class="player-card" data-status="online">
+                <div class="player-avatar">
+                    <img src="images/an.png" alt="Season安总">
+                </div>
+                <div class="player-name">Season安总</div>
+                <div class="player-tag">王者荣耀·王者百星</div>
+                <div class="player-status">在线</div>
+                <div class="player-price">¥19.9 / 局</div>
+                <button class="select-btn" onclick="location.href='detail.html?player=Season安总'">选择他</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 检查登录状态
+        async function checkLoginStatus() {
+            try {
+                const res = await fetch('/api/checkLogin', {
+                    method: 'GET',
+                    credentials: 'include'
+                });
+                // 增加状态码判断
+                if (!res.ok) throw new Error('接口返回失败');
+                const data = await res.json();
+                const userBtn = document.getElementById('userBtn');
+                if (data.isLogin) {
+                    // 已登录：显示个人中心按钮
+                    userBtn.className = 'user-btn center';
+                    userBtn.textContent = '个人中心';
+                    // 本地存储标记（兜底）
+                    localStorage.setItem('isLogin', 'true');
+                } else {
+                    // 未登录：显示登录按钮
+                    userBtn.className = 'user-btn login';
+                    userBtn.textContent = '登录';
+                    localStorage.removeItem('isLogin');
+                }
+            } catch (e) {
+                console.error('检查登录状态失败:', e);
+                // 网络错误时读取本地标记兜底
+                const userBtn = document.getElementById('userBtn');
+                const isLogin = localStorage.getItem('isLogin') === 'true';
+                if (isLogin) {
+                    userBtn.className = 'user-btn center';
+                    userBtn.textContent = '个人中心';
+                } else {
+                    userBtn.className = 'user-btn login';
+                    userBtn.textContent = '登录';
+                }
+            }
+        }
+
+        // 登录/个人中心按钮点击事件
+        function handleUserBtnClick() {
+            const userBtn = document.getElementById('userBtn');
+            if (userBtn.textContent === '登录') {
+                // 未登录跳转到登录页
+                location.href = '/login';
+            } else {
+                // 已登录跳转到个人中心
+                location.href = '/profile.html';
+            }
+        }
+
+        // 原有状态逻辑：离线按钮禁用，在线可跳转
+        document.querySelectorAll('.player-card').forEach(card => {
+            const status = card.dataset.status;
+            const statusEl = card.querySelector('.player-status');
+            const btn = card.querySelector('.select-btn');
+
+            if (status === 'offline') {
+                statusEl.classList.add('offline');
+                statusEl.textContent = '离线';
+                btn.disabled = true;
+            } else {
+                statusEl.classList.remove('offline');
+                statusEl.textContent = '在线';
+                btn.disabled = false;
+            }
+        });
+
+        // 页面加载+每次可见时检查登录状态
+        window.onload = checkLoginStatus;
+        document.addEventListener('visibilitychange', () => {
+            if (!document.hidden) checkLoginStatus();
+        });
+        // 监听来自profile.html的退出登录事件
+        window.addEventListener('storage', (e) => {
+            if (e.key === 'isLogin') {
+                checkLoginStatus();
+            }
+        });
+
+        // 供登录页调用的登录成功方法
+        window.loginSuccess = function() {
+            localStorage.setItem('isLogin', 'true');
+            checkLoginStatus();
+        };
+    </script>
+</body>
+</html>

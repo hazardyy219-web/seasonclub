@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>确认支付 - Season俱乐部</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Microsoft YaHei", sans-serif;
+        }
+        body {
+            background-color: #12121a;
+            color: #fff;
+            min-height: 100vh;
+        }
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 24px;
+            background-color: #1a1a2e;
+            border-bottom: 1px solid #2d2d3f;
+        }
+        .logo {
+            font-size: 20px;
+            font-weight: bold;
+            color: #00e5ff;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .back-btn {
+            padding: 6px 16px;
+            border-radius: 6px;
+            background: transparent;
+            color: #00e5ff;
+            border: 1px solid #00e5ff;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        .back-btn:hover {
+            background: #00e5ff;
+            color: #1a1a2e;
+        }
+        .pay-card {
+            max-width: 400px;
+            margin: 40px auto;
+            background-color: #1a1a2e;
+            border-radius: 16px;
+            padding: 30px;
+            border: 1px solid #2d2d3f;
+            box-shadow: 0 0 30px rgba(126, 34, 206, 0.3);
+        }
+        .pay-title {
+            font-size: 22px;
+            color: #00e5ff;
+            text-align: center;
+            margin-bottom: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        .order-info {
+            background-color: #2d2d3f;
+            border-radius: 12px;
+            padding: 18px;
+            margin-bottom: 24px;
+        }
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 12px;
+            font-size: 14px;
+        }
+        .info-label {
+            color: #9ca3af;
+        }
+        .info-value {
+            font-weight: 500;
+        }
+        .total-row {
+            margin-top: 16px;
+            padding-top: 16px;
+            border-top: 1px solid #3d3d5f;
+        }
+        .total-label {
+            color: #9ca3af;
+            font-size: 16px;
+        }
+        .total-value {
+            color: #ff006e;
+            font-size: 18px;
+            font-weight: bold;
+        }
+        .pay-tip {
+            text-align: center;
+            color: #9ca3af;
+            font-size: 12px;
+            margin-bottom: 24px;
+        }
+        .pay-btn {
+            width: 100%;
+            padding: 14px;
+            border-radius: 8px;
+            background: linear-gradient(90deg, #9333ea, #a855f7);
+            color: #fff;
+            font-size: 16px;
+            font-weight: bold;
+            border: none;
+            cursor: pointer;
+            margin-bottom: 12px;
+            transition: 0.2s;
+        }
+        .pay-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 0 20px rgba(147, 51, 234, 0.5);
+        }
+        .cancel-btn {
+            width: 100%;
+            padding: 12px;
+            border-radius: 8px;
+            background: transparent;
+            color: #9ca3af;
+            border: 1px solid #3d3d5f;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        .cancel-btn:hover {
+            color: #fff;
+            border-color: #4d4d6f;
+        }
+    </style>
+</head>
+<body>
+    <div class="top-bar">
+        <div class="logo">🎮 Season俱乐部</div>
+        <button class="back-btn" onclick="history.back()">← 返回上一页</button>
+    </div>
+
+    <div class="pay-card">
+        <h2 class="pay-title">💳 确认支付</h2>
+        <div class="order-info">
+            <div class="info-row">
+                <span class="info-label">陪玩名称</span>
+                <span class="info-value" id="playerName">Season饼饼</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">你的昵称</span>
+                <span class="info-value" id="nickname">season</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">下单时间</span>
+                <span class="info-value" id="orderTime"></span>
+            </div>
+            <div class="info-row total-row">
+                <span class="total-label">支付金额</span>
+                <span class="total-value">¥<span id="payAmount">0</span> (<span id="coinAmount">0</span> Season币)</span>
+            </div>
+        </div>
+        <p class="pay-tip">支付后将扣除对应Season币，订单立即生效</p>
+        <button class="pay-btn" id="confirmPayBtn" onclick="confirmPayment()">确认支付</button>
+        <button class="cancel-btn" onclick="history.back()">取消支付</button>
+    </div>
+
+    <script>
+        // 从URL获取参数
+        const params = new URLSearchParams(window.location.search);
+        const player = params.get('player') || 'Season饼饼';
+        const nickname = params.get('nickname') || 'season';
+        const total = params.get('total') || '99.00';
+
+        // 页面加载时初始化数据
+        window.onload = function() {
+            document.getElementById('playerName').textContent = player;
+            document.getElementById('nickname').textContent = nickname;
+            
+            // 格式化北京时间
+            const now = new Date();
+            const beijingTime = now.toLocaleString('zh-CN', {
+                timeZone: 'Asia/Shanghai',
+                year: 'numeric',
+                month: '2-digit',
+                day: '2-digit',
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit'
+            });
+            document.getElementById('orderTime').textContent = beijingTime;
+
+            // 1元 = 10 Season币（显示用）
+            const payAmount = parseFloat(total).toFixed(2);
+            document.getElementById('payAmount').textContent = payAmount;
+            const coinAmount = Math.round(parseFloat(total) * 10);
+            document.getElementById('coinAmount').textContent = coinAmount;
+
+            checkLoginStatus();
+        };
+
+        // 检查登录状态
+        async function checkLoginStatus() {
+            try {
+                const res = await fetch('/api/checkLogin', {
+                    method: 'GET',
+                    credentials: 'include'
+                });
+                const data = await res.json();
+                if (!data.isLogin) {
+                    alert('请先登录后再支付！');
+                    location.href = '/login.html';
+                }
+            } catch (e) {
+                console.error('登录状态检查失败:', e);
+                alert('网络异常，无法验证登录状态');
+            }
+        }
+
+        // 确认支付（只传 player 和 total，符合后端要求）
+        async function confirmPayment() {
+            const payBtn = document.getElementById('confirmPayBtn');
+            payBtn.disabled = true;
+            payBtn.textContent = '支付中...';
+
+            try {
+                const res = await fetch('/order', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    credentials: 'include',
+                    body: JSON.stringify({
+                        player: player,
+                        total: total, // 只传总价，后端自动按1:10转币数
+                        gift: 0
+                    })
+                });
+
+                const data = await res.json();
+                if (data.ok === 1) {
+                    alert('✅ 支付成功！订单已生效');
+                    location.href = '/profile.html';
+                } else {
+                    alert('❌ 支付失败：' + (data.msg || '未知错误'));
+                    payBtn.disabled = false;
+                    payBtn.textContent = '确认支付';
+                }
+            } catch (e) {
+                console.error('支付请求失败:', e);
+                alert('❌ 网络错误，支付失败，请重试');
+                payBtn.disabled = false;
+                payBtn.textContent = '确认支付';
+            }
+        }
+    </script>
+</body>
+</html>

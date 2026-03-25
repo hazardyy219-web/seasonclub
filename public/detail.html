@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SeasonClub - 陪玩详情</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Microsoft YaHei", sans-serif;
+        }
+        body {
+            background-color: #12121a;
+            color: #fff;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 20px;
+            background-color: #1a1a2e;
+            border-bottom: 1px solid #2d2d3f;
+            z-index: 999;
+        }
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .logo {
+            font-size: 20px;
+            color: #00e5ff;
+            font-weight: bold;
+        }
+        .back-btn {
+            padding: 4px 10px;
+            border: 1px solid #00e5ff;
+            border-radius: 4px;
+            background: transparent;
+            color: #00e5ff;
+            font-size: 12px;
+            cursor: pointer;
+            text-decoration: none;
+        }
+        .user-btn {
+            padding: 6px 16px;
+            border-radius: 6px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: 0.2s;
+            border: 1px solid #7e22ce;
+            background: transparent;
+            color: #fff;
+        }
+        .user-btn.login {
+            background-color: #7e22ce;
+        }
+        .user-btn.center {
+            background-color: #00e5ff;
+            color: #1a1a2e;
+            border-color: #00e5ff;
+        }
+        .user-btn:hover {
+            opacity: 0.9;
+            transform: translateY(-1px);
+        }
+        .detail-box {
+            background-color: #1a1a2e;
+            border-radius: 16px;
+            padding: 30px;
+            width: 100%;
+            max-width: 700px;
+            display: flex;
+            gap: 30px;
+            box-shadow: 0 0 30px rgba(126, 34, 206, 0.3);
+            margin-top: 80px;
+        }
+        .left-section {
+            flex: 1;
+            text-align: center;
+        }
+        .avatar-wrap {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            margin: 0 auto 20px;
+            overflow: hidden;
+            border: 3px solid #7e22ce;
+        }
+        .avatar-wrap img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .player-name {
+            font-size: 24px;
+            color: #00e5ff;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        .player-status {
+            font-size: 14px;
+            color: #10b981;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+            cursor: pointer;
+        }
+        .player-status::before {
+            content: "●";
+            font-size: 8px;
+        }
+        .player-status.offline {
+            color: #6b7280;
+        }
+        .info-table {
+            background-color: #2d2d3f;
+            border-radius: 10px;
+            padding: 15px;
+            text-align: left;
+            margin-bottom: 20px;
+        }
+        .info-table p {
+            font-size: 13px;
+            color: #cccccc;
+            margin: 8px 0;
+        }
+        .info-table p strong {
+            color: #ffffff;
+            min-width: 60px;
+            display: inline-block;
+        }
+        .gift-btns {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            justify-content: center;
+        }
+        .gift-btn {
+            padding: 8px 12px;
+            background-color: #7e22ce;
+            border: none;
+            color: #ffffff;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: bold;
+        }
+        .gift-btn:hover {
+            background-color: #a855f7;
+        }
+        .right-section {
+            flex: 1.2;
+        }
+        .order-title {
+            font-size: 20px;
+            color: #7e22ce;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .form-item {
+            margin-bottom: 15px;
+        }
+        .form-item label {
+            font-size: 13px;
+            color: #cccccc;
+            margin-bottom: 6px;
+            display: block;
+        }
+        .form-item input,
+        .form-item select {
+            width: 100%;
+            padding: 10px;
+            background-color: #333344;
+            border: 1px solid #444466;
+            border-radius: 6px;
+            color: #ffffff;
+            outline: none;
+        }
+        .total-price {
+            font-size: 16px;
+            color: #00e5ff;
+            font-weight: bold;
+            margin: 15px 0;
+        }
+        .confirm-btn {
+            width: 100%;
+            padding: 12px;
+            background-color: #a855f7;
+            border: none;
+            color: #ffffff;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        .confirm-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+        .back-btn-normal {
+            width: 100%;
+            padding: 10px;
+            background: transparent;
+            border: 1px solid #7e22ce;
+            color: #7e22ce;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="header-left">
+          <div class="logo">🎮 陪玩大厅</div>
+          <a href="list.html" class="back-btn">返回列表</a>
+        </div>
+        <button id="userBtn" class="user-btn login" onclick="handleUserBtnClick()">登录 / 个人中心</button>
+    </div>
+
+    <div class="detail-box">
+        <div class="left-section">
+            <div class="avatar-wrap">
+                <img id="avatar" src="images/default.png" alt="陪玩头像">
+            </div>
+            <div class="player-name" id="name">Season小蒋</div>
+            <div class="player-status" id="status" onclick="toggleStatus()">在线</div>
+            <div class="info-table">
+                <p><strong>来自</strong>：<span id="city">未知</span></p>
+                <p><strong>性格</strong>：<span id="personality">未知</span></p>
+                <p><strong>段位</strong>：<span id="rank">未知</span></p>
+                <p><strong>价格</strong>：<span id="price">¥0 / 小时</span></p>
+            </div>
+            <div class="gift-btns">
+                <button class="gift-btn" onclick="setGift(9.9)">一朵花 ¥9.9</button>
+                <button class="gift-btn" onclick="setGift(20)">一杯奶茶 ¥20</button>
+                <button class="gift-btn" onclick="setGift(50)">一个戒指 ¥52</button>
+                <button class="gift-btn" onclick="setGift(100)">火箭 ¥100</button>
+                <button class="gift-btn" onclick="setGift(520)">跑车 ¥520</button>
+            </div>
+        </div>
+        <div class="right-section">
+            <div class="order-title">🎁 立即下单</div>
+            <div class="form-item">
+                <label>你的昵称</label>
+                <input type="text" id="nickname" placeholder="请输入你的昵称">
+            </div>
+            <div class="form-item">
+                <label>选择游戏</label>
+                <select id="game">
+                    <option value="无畏契约">无畏契约</option>
+                    <option value="王者荣耀">王者荣耀</option>
+                    <option value="三角洲行动">三角洲行动</option>
+                </select>
+            </div>
+            <div class="form-item">
+                <label>陪玩时长（小时）</label>
+                <input type="number" id="hourCount" placeholder="请输入时长（0-24）" min="0" max="24" value="1">
+            </div>
+            <div class="form-item">
+                <label>打赏礼物 (可选)</label>
+                <input type="number" id="gift" value="0" min="0">
+            </div>
+            <div class="total-price">总价：¥<span id="total">0</span></div>
+            <button class="confirm-btn" id="confirmOrderBtn" onclick="goToPay()">✅ 确认下单</button>
+            <button class="back-btn-normal" onclick="location.href='list.html'">← 返回陪玩大厅</button>
+        </div>
+    </div>
+
+    <script>
+        // 检查登录状态
+        async function checkLoginStatus() {
+            try {
+                const res = await fetch('/api/checkLogin', {
+                    method: 'GET',
+                    credentials: 'include'
+                });
+                if (!res.ok) throw new Error('接口返回失败');
+                const data = await res.json();
+                const userBtn = document.getElementById('userBtn');
+                if (data.isLogin) {
+                    userBtn.className = 'user-btn center';
+                    userBtn.textContent = '个人中心';
+                    localStorage.setItem('isLogin', 'true');
+                } else {
+                    userBtn.className = 'user-btn login';
+                    userBtn.textContent = '登录';
+                    localStorage.removeItem('isLogin');
+                }
+            } catch (e) {
+                console.error('检查登录状态失败:', e);
+                const userBtn = document.getElementById('userBtn');
+                const isLogin = localStorage.getItem('isLogin') === 'true';
+                if (isLogin) {
+                    userBtn.className = 'user-btn center';
+                    userBtn.textContent = '个人中心';
+                } else {
+                    userBtn.className = 'user-btn login';
+                    userBtn.textContent = '登录';
+                }
+            }
+        }
+
+        // 登录/个人中心按钮点击事件
+        function handleUserBtnClick() {
+            const userBtn = document.getElementById('userBtn');
+            if (userBtn.textContent === '登录') {
+                location.href = '/login';
+            } else {
+                location.href = '/profile.html';
+            }
+        }
+
+        const playerData = {
+            "Season阿程": { avatar: "acheng.png", city: "美国", personality: "阳光野王·带飞全场", rank: "王者荣耀·野王", price: "9.9", status: "online" },
+            "Season小蒋": { avatar: "xiaojiang.png", city: "湖南长沙", personality: "技术流选手·耐心教学", rank: "无畏契约·赋能前100", price: "68", status: "online" },
+            "Season小刘": { avatar: "xiaoliu.png", city: "南昌", personality: "沉稳冷静·意识流", rank: "无畏契约·神话3", price: "45", status: "online" },
+            "Season小郭": { avatar: "xiaoguo.png", city: "后塘", personality: "幽默搞怪·极速上分", rank: "无畏契约·神话5", price: "0.99", status: "online" },
+            "Season小杜": { avatar: "xiaodu.png", city: "浙江", personality: "软核技术·善战的蛆", rank: "三角洲·航天刽子手", price: "128", status: "online" },
+            "Season饼饼": { avatar: "bing.png", city: "南昌", personality: "软萌懒羊羊·暖心陪伴", rank: "无畏契约·赋能姐", price: "99", status: "online" },
+            "Season嘟嘟": { avatar: "dudu.png", city: "保密", personality: "魔王护·威风的龙", rank: "三角洲手游·巴克什皇帝", price: "288", status: "online" },
+            "Season安总": { avatar: "an.png", city: "浙江杭州", personality: "霸气侧漏·王者百星", rank: "王者荣耀·王者百星", price: "19.9", status: "online" }
+        };
+
+        const params = new URLSearchParams(window.location.search);
+        const playerName = params.get("player");
+        const current = playerData[playerName] || playerData["Season小蒋"];
+
+        document.getElementById("name").innerText = playerName || "Season小蒋";
+        document.getElementById("avatar").src = `images/${current.avatar}`;
+        document.getElementById("city").innerText = current.city;
+        document.getElementById("personality").innerText = current.personality;
+        document.getElementById("rank").innerText = current.rank;
+        document.getElementById("price").innerText = `¥${current.price} / 小时`;
+
+        const statusEl = document.getElementById('status');
+        const confirmBtn = document.getElementById('confirmOrderBtn');
+
+        if (current.status === 'offline') {
+            statusEl.classList.add('offline');
+            statusEl.textContent = '离线';
+            confirmBtn.disabled = true;
+        } else {
+            statusEl.classList.remove('offline');
+            statusEl.textContent = '在线';
+            confirmBtn.disabled = false;
+        }
+
+        function toggleStatus() {
+            if (statusEl.textContent === '在线') {
+                statusEl.textContent = '离线';
+                statusEl.classList.add('offline');
+                confirmBtn.disabled = true;
+            } else {
+                statusEl.textContent = '在线';
+                statusEl.classList.remove('offline');
+                confirmBtn.disabled = false;
+            }
+        }
+
+        let giftAmount = 0;
+        function setGift(price) {
+            giftAmount = price;
+            document.getElementById("gift").value = price;
+            updateTotal();
+        }
+
+        // 计算总价（元）
+        function updateTotal() {
+            const basePrice = parseFloat(current.price) || 0;
+            const gift = parseFloat(document.getElementById("gift").value) || 0;
+            const hourCount = parseInt(document.getElementById("hourCount").value) || 1;
+            const total = (basePrice * hourCount + gift).toFixed(2);
+            document.getElementById("total").innerText = total;
+        }
+
+        // 初始化 & 监听变化
+        updateTotal();
+        document.getElementById("gift").addEventListener("input", updateTotal);
+        document.getElementById("hourCount").addEventListener("input", updateTotal);
+
+        // 跳转支付页（传递 player、nickname、total）
+        function goToPay() {
+            const nickname = document.getElementById("nickname").value;
+            if (!nickname) {
+                alert("请输入你的昵称！");
+                return;
+            }
+            const total = document.getElementById("total").innerText;
+            location.href = `pay.html?player=${encodeURIComponent(playerName)}&total=${total}&nickname=${encodeURIComponent(nickname)}`;
+        }
+
+        // 页面加载+状态监听
+        window.onload = checkLoginStatus;
+        document.addEventListener('visibilitychange', () => {
+            if (!document.hidden) checkLoginStatus();
+        });
+        window.addEventListener('storage', (e) => {
+            if (e.key === 'isLogin') {
+                checkLoginStatus();
+            }
+        });
+    </script>
+</body>
+</html>
